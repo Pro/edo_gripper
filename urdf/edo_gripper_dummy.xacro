@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find edo_description)/urdf/utilities.xacro" />
+
+    <!-- some constants -->
+    <xacro:property name="joint_damping" value="0.5" />
+    <xacro:property name="max_effort" value="300"/>
+    <xacro:property name="max_velocity" value="10"/>
+
+    <xacro:macro name="edo_gripper_dummy" params="parent hardware_interface robot_name *origin">
+
+        <joint name="${robot_name}_gripper_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="${parent}"/>
+            <child link="${robot_name}_gripper_link" />
+        </joint>
+
+
+        <link name="${robot_name}_gripper_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="0.005"/>
+                <inertia
+                        ixx="1"
+                        ixy="0"
+                        ixz="0"
+                        iyy="1"
+                        iyz="0"
+                        izz="1" />
+            </inertial>
+
+            <visual>
+                <origin xyz="-0.035 0 -0.035" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/base.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </visual>
+
+            <collision>
+                <origin xyz="-0.035 0 -0.035" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/base.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </collision>
+        </link>
+
+        <joint name="${robot_name}_gripper_left_base_joint" type="revolute">
+            <parent link="${robot_name}_gripper_link"/>
+            <child link="${robot_name}_gripper_left_base_link"/>
+            <origin xyz="0.025 0.0195 0" rpy="0 0 0"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-PI / 2}" upper="${PI / 2}"
+                   effort="${max_effort}" velocity="${max_velocity}" />
+            <dynamics damping="${joint_damping}"/>
+        </joint>
+
+
+        <link name="${robot_name}_gripper_left_base_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="0.0005"/>
+                <inertia
+                        ixx="1"
+                        ixy="0"
+                        ixz="0"
+                        iyy="1"
+                        iyz="0"
+                        izz="1" />
+            </inertial>
+
+            <visual>
+                <origin xyz="-0.005 0 -0.04" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_base.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </visual>
+
+            <collision>
+                <origin xyz="-0.005 0 -0.04" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_base.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </collision>
+        </link>
+
+
+
+        <joint name="${robot_name}_gripper_left_finger_joint" type="revolute">
+            <parent link="${robot_name}_gripper_left_base_link"/>
+            <child link="${robot_name}_gripper_left_finger_link"/>
+            <origin xyz="0 0.04 0" rpy="0 0 ${PI}"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-PI*2}" upper="${PI*2}"
+                   effort="${max_effort}" velocity="${max_velocity}" />
+            <dynamics damping="${joint_damping}"/>
+        </joint>
+
+
+        <link name="${robot_name}_gripper_left_finger_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="0.0005"/>
+                <inertia
+                        ixx="1"
+                        ixy="0"
+                        ixz="0"
+                        iyy="1"
+                        iyz="0"
+                        izz="1" />
+            </inertial>
+
+            <visual>
+                <origin xyz="-0.071 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_tip.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </visual>
+
+            <collision>
+                <origin xyz="-0.071 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_tip.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </collision>
+        </link>
+
+        <joint name="${robot_name}_gripper_right_base_joint" type="revolute">
+            <parent link="${robot_name}_gripper_link"/>
+            <child link="${robot_name}_gripper_right_base_link"/>
+            <origin xyz="-0.025 0.0195 0" rpy="${PI} 0 ${PI}"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-PI / 2}" upper="${PI / 2}"
+                   effort="${max_effort}" velocity="${max_velocity}" />
+            <dynamics damping="${joint_damping}"/>
+        </joint>
+
+
+        <link name="${robot_name}_gripper_right_base_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="0.0005"/>
+                <inertia
+                        ixx="1"
+                        ixy="0"
+                        ixz="0"
+                        iyy="1"
+                        iyz="0"
+                        izz="1" />
+            </inertial>
+
+            <visual>
+                <origin xyz="-0.005 0 -0.04" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_base.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </visual>
+
+            <collision>
+                <origin xyz="-0.005 0 -0.04" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_base.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </collision>
+        </link>
+
+
+
+        <joint name="${robot_name}_gripper_right_finger_joint" type="revolute">
+            <parent link="${robot_name}_gripper_right_base_link"/>
+            <child link="${robot_name}_gripper_link_finger_right"/>
+            <origin xyz="0 0.04 0" rpy="0 0 ${PI}"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${-PI*2}" upper="${PI*2}"
+                   effort="${max_effort}" velocity="${max_velocity}" />
+            <dynamics damping="${joint_damping}"/>
+        </joint>
+
+
+        <link name="${robot_name}_gripper_link_finger_right">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="0.0005"/>
+                <inertia
+                        ixx="1"
+                        ixy="0"
+                        ixz="0"
+                        iyy="1"
+                        iyz="0"
+                        izz="1" />
+            </inertial>
+
+            <visual>
+                <origin xyz="-0.071 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_tip.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </visual>
+
+            <collision>
+                <origin xyz="-0.071 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://edo_gripper/meshes/finger_tip.STL"/>
+                </geometry>
+                <material name="Brown"/>
+            </collision>
+        </link>
+
+        <!--  Here we define another dummy joint. It is placed at the end of the tool, so we can then attach a frame at its TCP for control -->
+        <joint name="${robot_name}_gripper_tip_joint" type="fixed">
+            <parent link="${robot_name}_gripper_link" />
+            <child link = "${robot_name}_gripper_link_ee" />
+            <origin xyz="0 0 0.08" rpy="0 0 0" />
+        </joint>
+
+        <!--  The TCP frame is here defined -->
+        <link name="${robot_name}_gripper_link_ee"/>
+
+        <!-- Load Gazebo lib and set the robot namespace -->
+        <gazebo>
+            <plugin name="${robot_name}_gripper" filename="libedo_gripper.so">
+                <robotNamespace>/${robot_name}</robotNamespace>
+            </plugin>
+        </gazebo>
+
+
+    </xacro:macro>
+
+</robot>

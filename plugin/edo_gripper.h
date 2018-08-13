@@ -21,6 +21,11 @@ namespace gazebo {
     public:
         void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/);
 
+
+
+        static gazebo::physics::LinkPtr getLinkEndingWith(physics::ModelPtr model, std::string link);
+        static gazebo::physics::JointPtr getJointEndingWith(physics::ModelPtr model, std::string link);
+
     public:
         void OnUpdate();
 
@@ -53,6 +58,11 @@ namespace gazebo {
 
         /// Pointer to the update event connection
         event::ConnectionPtr updateConnection;
+
+        gazebo::physics::JointPtr gripper_left_base_joint;
+        gazebo::physics::JointPtr gripper_left_finger_joint;
+        gazebo::physics::JointPtr gripper_right_base_joint;
+        gazebo::physics::JointPtr gripper_right_finger_joint;
 
         void setGripperSpan(float span);
     };

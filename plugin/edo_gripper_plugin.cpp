@@ -57,6 +57,25 @@ void EdoGripper::Load(physics::ModelPtr _parent, sdf::ElementPtr sdf) {
 
     ROS_INFO_NAMED("gazebo_edo_gripper", "Starting gazebo_edo_gripper plugin in namespace: %s", robot_namespace_.c_str());
 
+
+    gripper_left_base_joint = getJointEndingWith(this->model, "gripper_left_base_joint");
+    if (gripper_left_base_joint == nullptr) {
+        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint ending with 'gripper_left_base_joint' not found in model");
+    }
+    gripper_left_finger_joint = getJointEndingWith(this->model, "gripper_left_finger_joint");
+    if (gripper_left_finger_joint == nullptr) {
+        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint ending with 'gripper_left_finger_joint' not found in model");
+    }
+    gripper_right_base_joint = getJointEndingWith(this->model, "gripper_right_base_joint");
+    if (gripper_right_base_joint == nullptr) {
+        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint ending with 'gripper_right_base_joint' not found in model");
+    }
+    gripper_right_finger_joint = getJointEndingWith(this->model, "gripper_right_finger_joint");
+    if (gripper_right_finger_joint == nullptr) {
+        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint ending with 'gripper_right_finger_joint' not found in model");
+    }
+
+
     // Listen to the update event. This event is broadcast every
     // simulation iteration.
     this->updateConnection = event::Events::ConnectWorldUpdateBegin(
@@ -153,44 +172,50 @@ void EdoGripper::Reset()
 
 void EdoGripper::setGripperSpan(float span) {
 
-    //
+
+    if (gripper_left_base_joint == nullptr || gripper_left_finger_joint == nullptr ||
+            gripper_right_base_joint == nullptr || gripper_right_finger_joint == nullptr) {
+        return;
+    }
 
     this->current_span = span;
 
     span *= 1000;
 
-    double fingertip_angle = (0.7428 * span + 150.28) - 180;
-    double fingerbase_angle = -fingertip_angle;
+    double fingerbase_angle = -(0.7428 * span + 150.28)+180;
+    double fingertip_angle = -fingerbase_angle + 180;
 
     fingertip_angle = fingertip_angle / 180 * M_PI;
     fingerbase_angle = fingerbase_angle / 180 * M_PI;
 
-    physics::JointPtr jnt = model->GetJoint("joint_base_left");
-    if (!jnt) {
-        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint joint_base_left not found in model");
-        return;
-    }
-    jnt->SetPosition(0, fingerbase_angle, false);
+    gripper_left_base_joint->SetPosition(0, fingerbase_angle, false);
+    gripper_right_base_joint->SetPosition(0, fingerbase_angle, false);
+    gripper_left_finger_joint->SetPosition(0, fingertip_angle, false);
+    gripper_right_finger_joint->SetPosition(0, fingertip_angle, false);
 
-    jnt = model->GetJoint("joint_base_right");
-    if (!jnt) {
-        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint joint_base_right not found in model");
-        return;
-    }
-    jnt->SetPosition(0, fingerbase_angle, false);
+}
 
-    jnt = model->GetJoint("joint_finger_left");
-    if (!jnt) {
-        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint joint_finger_left not found in model");
-        return;
-    }
-    jnt->SetPosition(0, fingertip_angle, false);
 
-    jnt = model->GetJoint("joint_finger_right");
-    if (!jnt) {
-        ROS_ERROR_NAMED("gazebo_edo_gripper", "Joint joint_finger_right not found in model");
-        return;
-    }
-    jnt->SetPosition(0, fingertip_angle, false);
+inline bool ends_with(std::string const & value, std::string const & ending)
+{
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
 
+gazebo::physics::LinkPtr EdoGripper::getLinkEndingWith(physics::ModelPtr model, std::string ending) {
+    std::vector<gazebo::physics::LinkPtr> links = model->GetLinks();
+    for (unsigned int i=0; i<links.size(); i++) {
+        if (ends_with(links[i]->GetName(), ending))
+            return links[i];
+    }
+    return nullptr;
+}
+
+gazebo::physics::JointPtr EdoGripper::getJointEndingWith(physics::ModelPtr model, std::string ending) {
+    std::vector<gazebo::physics::JointPtr> joints = model->GetJoints();
+    for (unsigned int i=0; i<joints.size(); i++) {
+        if (ends_with(joints[i]->GetName(), ending))
+            return joints[i];
+    }
+    return nullptr;
 }

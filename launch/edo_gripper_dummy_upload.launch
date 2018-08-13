@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- This lauch file just loads the URDF with the given hardware interface and robot name into the ROS Parameter Server -->
+    <arg name="hardware_interface" default="hardware_interface/PositionJointInterface"/>
+    <arg name="robot_name" default="edo"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find edo_gripper)/urdf/edo_gripper_dummy.urdf.xacro' hardware_interface:=$(arg hardware_interface) robot_name:=$(arg robot_name)" />
+
+</launch>
