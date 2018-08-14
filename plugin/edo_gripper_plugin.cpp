@@ -13,6 +13,7 @@ using namespace gazebo;
 void EdoGripper::Load(physics::ModelPtr _parent, sdf::ElementPtr sdf) {
     current_span = 0;
     desired_span = 0;
+    gripper_moving = false;
 
     // Make sure the ROS node for Gazebo has already been initialized
     if (!ros::isInitialized()) {
@@ -92,6 +93,8 @@ void EdoGripper::Load(physics::ModelPtr _parent, sdf::ElementPtr sdf) {
 
     this->gripper_span_publisher = model_nh.advertise<std_msgs::Float32>("gripper_span",1);
 
+    this->gripper_state_publisher = model_nh.advertise<std_msgs::Int8>("gripper_state",1);
+
     Reset();
 }
 
@@ -102,8 +105,11 @@ void EdoGripper::OnUpdate() {
 
     std_msgs::Float32 msg;
     msg.data = current_span;
-
     this->gripper_span_publisher.publish(msg);
+
+    std_msgs::Int8 msgState;
+    msgState.data = gripper_moving;
+    this->gripper_state_publisher.publish(msgState);
 
     // Get the simulation time and period
     gazebo::common::Time gz_time_now = model->GetWorld()->SimTime();
@@ -143,6 +149,10 @@ void EdoGripper::OnUpdate() {
             setGripperSpan(current_span - maxAllowedMove);
     }
 
+    if (abs(diffMm) < 0.001) {
+        gripper_moving = false;
+    }
+
 }
 
 /** Functions for recieving Messages (registerd via suscribers)
@@ -155,6 +165,8 @@ void EdoGripper::on_set_gripper_span_msg(const std_msgs::Float32ConstPtr &msg) {
         desired_span = 0.08;
     else
         desired_span = msg->data;
+
+    gripper_moving = true;
 
     ROS_DEBUG_NAMED("gazebo_edo_gripper", "Set span: %f", desired_span);
 }
@@ -188,10 +200,10 @@ void EdoGripper::setGripperSpan(float span) {
     fingertip_angle = fingertip_angle / 180 * M_PI;
     fingerbase_angle = fingerbase_angle / 180 * M_PI;
 
-    gripper_left_base_joint->SetPosition(0, fingerbase_angle, false);
+    /*gripper_left_base_joint->SetPosition(0, fingerbase_angle, false);
     gripper_right_base_joint->SetPosition(0, fingerbase_angle, false);
     gripper_left_finger_joint->SetPosition(0, fingertip_angle, false);
-    gripper_right_finger_joint->SetPosition(0, fingertip_angle, false);
+    gripper_right_finger_joint->SetPosition(0, fingertip_angle, false);*/
 
 }
 

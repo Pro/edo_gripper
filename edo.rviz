@@ -91,7 +91,7 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        edo_gripper_link_finger_right:
+        edo_gripper_right_finger_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false

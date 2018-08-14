@@ -10,6 +10,7 @@
 // ROS
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Int8.h>
 
 // Gazebo
 #include <gazebo/gazebo.hh>
@@ -50,9 +51,12 @@ namespace gazebo {
 
         /// Publisher for gripper_span
         ros::Publisher gripper_span_publisher;
+        ros::Publisher gripper_state_publisher;
 
         float desired_span;
         float current_span;
+
+        bool gripper_moving;
 
         ros::NodeHandle model_nh;
 

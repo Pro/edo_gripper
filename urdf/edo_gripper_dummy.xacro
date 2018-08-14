@@ -93,9 +93,9 @@
         <joint name="${robot_name}_gripper_left_finger_joint" type="revolute">
             <parent link="${robot_name}_gripper_left_base_link"/>
             <child link="${robot_name}_gripper_left_finger_link"/>
-            <origin xyz="0 0.04 0" rpy="0 0 ${PI}"/>
+            <origin xyz="0 0.04 0" rpy="0 0 0"/>
             <axis xyz="0 0 1"/>
-            <limit lower="${-PI*2}" upper="${PI*2}"
+            <limit lower="${-PI / 2}" upper="${PI / 2}"
                    effort="${max_effort}" velocity="${max_velocity}" />
             <dynamics damping="${joint_damping}"/>
         </joint>
@@ -176,16 +176,16 @@
 
         <joint name="${robot_name}_gripper_right_finger_joint" type="revolute">
             <parent link="${robot_name}_gripper_right_base_link"/>
-            <child link="${robot_name}_gripper_link_finger_right"/>
-            <origin xyz="0 0.04 0" rpy="0 0 ${PI}"/>
+            <child link="${robot_name}_gripper_right_finger_link"/>
+            <origin xyz="0 0.04 0" rpy="0 0 0"/>
             <axis xyz="0 0 1"/>
-            <limit lower="${-PI*2}" upper="${PI*2}"
+            <limit lower="${-PI / 2}" upper="${PI / 2}"
                    effort="${max_effort}" velocity="${max_velocity}" />
             <dynamics damping="${joint_damping}"/>
         </joint>
 
 
-        <link name="${robot_name}_gripper_link_finger_right">
+        <link name="${robot_name}_gripper_right_finger_link">
             <inertial>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <mass value="0.0005"/>
@@ -230,7 +230,56 @@
             <plugin name="${robot_name}_gripper" filename="libedo_gripper.so">
                 <robotNamespace>/${robot_name}</robotNamespace>
             </plugin>
-        </gazebo>
+        </gazebo>        <!-- Load Gazebo lib and set the robot namespace -->
+
+        <transmission name="${robot_name}_gripper_tran_1">
+            <robotNamespace>/${robot_name}</robotNamespace>
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${robot_name}_gripper_left_base_joint">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+            </joint>
+            <actuator name="${robot_name}_gripper_motor_1">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="${robot_name}_gripper_tran_2">
+            <robotNamespace>/${robot_name}</robotNamespace>
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${robot_name}_gripper_right_base_joint">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+            </joint>
+            <actuator name="${robot_name}_gripper_motor_2">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="${robot_name}_gripper_tran_3">
+            <robotNamespace>/${robot_name}</robotNamespace>
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${robot_name}_gripper_left_finger_joint">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+            </joint>
+            <actuator name="${robot_name}_gripper_motor_3">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="${robot_name}_gripper_tran_4">
+            <robotNamespace>/${robot_name}</robotNamespace>
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${robot_name}_gripper_right_finger_joint">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+            </joint>
+            <actuator name="${robot_name}_gripper_motor_4">
+                <hardwareInterface>${hardware_interface}</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
 
 
     </xacro:macro>
