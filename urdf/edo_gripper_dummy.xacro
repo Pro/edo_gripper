@@ -6,7 +6,7 @@
     <!-- some constants -->
     <xacro:property name="joint_damping" value="0.5" />
     <xacro:property name="max_effort" value="300"/>
-    <xacro:property name="max_velocity" value="10"/>
+    <xacro:property name="max_velocity" value="0.5"/>
 
     <xacro:macro name="edo_gripper_dummy" params="parent hardware_interface robot_name *origin">
 
@@ -219,18 +219,11 @@
         <joint name="${robot_name}_gripper_tip_joint" type="fixed">
             <parent link="${robot_name}_gripper_link" />
             <child link = "${robot_name}_gripper_link_ee" />
-            <origin xyz="0 0 0.08" rpy="0 0 0" />
+            <origin xyz="0 0.15 0" rpy="0 0 0" />
         </joint>
 
         <!--  The TCP frame is here defined -->
         <link name="${robot_name}_gripper_link_ee"/>
-
-        <!-- Load Gazebo lib and set the robot namespace -->
-        <gazebo>
-            <plugin name="${robot_name}_gripper" filename="libedo_gripper.so">
-                <robotNamespace>/${robot_name}</robotNamespace>
-            </plugin>
-        </gazebo>        <!-- Load Gazebo lib and set the robot namespace -->
 
         <transmission name="${robot_name}_gripper_tran_1">
             <robotNamespace>/${robot_name}</robotNamespace>
