@@ -11,7 +11,6 @@
         <arg name="paused" default="$(arg paused)"/>
         <arg name="gui" value="$(arg gui)"/>
         <arg name="robot_name" value="$(arg robot_name)"/>
-        <arg name="upload_launch" value="$(find edo_gripper)/launch/edo_gripper_dummy_upload.launch"/>
     </include>
 
     <group ns="$(arg robot_name)">
