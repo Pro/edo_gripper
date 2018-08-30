@@ -15,7 +15,7 @@ roslaunch edo_gripper test.launch
 To start gazebo with the dummy gripper use:
 
 ```sh
-roslaunch edo_gripper gazebo_dummy_gripper.launch
+roslaunch edo_gripper edo_gripper_dummy.launch 
 
 # Set gripper span. The value is in meter
 rostopic pub /edo/set_gripper_span std_msgs/Float32 "data: 0.05"

@@ -12,7 +12,7 @@
     <xacro:arg name="hardware_interface" default="hardware_interface/PositionJointInterface"/>
     <xacro:arg name="robot_name" default="edo"/>
     <xacro:arg name="origin_xyz" default="0 0 0"/>
-    <xacro:arg name="origin_rpy" default="0 0 0"/>
+    <xacro:arg name="origin_rpy" default="0 0 -1.57079632679"/>
 
     <link name="world"/>
 
@@ -21,11 +21,11 @@
     </gazebo>
 
     <xacro:edo hardware_interface="$(arg hardware_interface)" robot_name="$(arg robot_name)" parent="world">
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="$(arg origin_xyz)" rpy="$(arg origin_rpy)"/>
     </xacro:edo>
 
     <xacro:edo_gripper_dummy hardware_interface="$(arg hardware_interface)" robot_name="$(arg robot_name)" parent="$(arg robot_name)_link_ee">
-        <origin xyz="0 0 0" rpy="-${PI / 2} 0 ${PI / 4}"/>
+        <origin xyz="0 0 0" rpy="-${PI / 2} 0 -${PI / 4}"/>
     </xacro:edo_gripper_dummy>
 
 </robot> 
