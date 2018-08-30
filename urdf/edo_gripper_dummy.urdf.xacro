@@ -25,7 +25,7 @@
     </xacro:edo>
 
     <xacro:edo_gripper_dummy hardware_interface="$(arg hardware_interface)" robot_name="$(arg robot_name)" parent="$(arg robot_name)_link_ee">
-        <origin xyz="0 0 0" rpy="-${PI / 2} 0 -${PI / 4}"/>
+        <origin xyz="0 0 0" rpy="0 0 -${PI / 4}"/>
     </xacro:edo_gripper_dummy>
 
 </robot> 
