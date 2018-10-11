@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     ros::NodeHandle n("~");
 
     int update_rate;
-    n.param<int>("update_rate", update_rate, 10);
+    n.param<int>("update_rate", update_rate, 50);
 
     EdoGripperControl control;
     control.Reset();
