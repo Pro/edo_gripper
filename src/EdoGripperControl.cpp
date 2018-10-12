@@ -43,7 +43,7 @@ void EdoGripperControl::OnUpdate() {
     this->gripper_span_publisher.publish(msg);
 
 
-    gripper_moving = abs(current_span - desired_span) > 0.0005;
+    gripper_moving = abs(current_span - desired_span) > 0.001;
 
     if (gripper_moving)
         this->setGripperSpan(desired_span);
