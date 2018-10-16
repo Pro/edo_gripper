@@ -67,11 +67,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        edo_base_spacer_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         edo_gripper_left_base_link:
           Alpha: 1
           Show Axes: false
